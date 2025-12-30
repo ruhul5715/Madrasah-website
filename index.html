@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>আমার হৃদয়ের স্বপ্ন</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --text:#222;
+  --primary:#2c3e50;
+}
+.dark{
+  --bg:#121212;
+  --card:#1e1e1e;
+  --text:#eaeaea;
+  --primary:#16a085;
+}
+
+body{
+  margin:0;
+  font-family: "Noto Serif Bengali", Arial;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+}
+
+.app{
+  width:100%;
+  max-width:480px;
+  background:var(--card);
+  min-height:100vh;
+}
+
+/* marquee */
+.marquee{
+  background:var(--primary);
+  color:white;
+  padding:8px;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.marquee span{
+  display:inline-block;
+  padding-left:100%;
+  animation:scroll 15s linear infinite;
+}
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
+}
+
+/* header */
+.header{
+  padding:15px;
+  text-align:center;
+}
+.header h1{margin:5px 0}
+.header p{margin:0;font-size:14px}
+
+/* clock */
+.clock{
+  text-align:center;
+  font-size:18px;
+  margin-bottom:10px;
+}
+
+/* prayer */
+.prayer{
+  background:#ecf0f1;
+  padding:10px;
+  font-size:14px;
+  border-radius:10px;
+  margin:10px;
+}
+.dark .prayer{background:#2a2a2a}
+
+/* content */
+.content{
+  padding:15px;
+  line-height:1.9;
+  font-size:18px;
+  min-height:200px;
+  white-space:pre-line;
+}
+
+/* footer buttons */
+.controls{
+  display:flex;
+  gap:8px;
+  padding:10px;
+}
+button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:var(--primary);
+  color:white;
+  font-size:14px;
+}
+
+/* toc */
+.toc{
+  padding:15px;
+  display:none;
+}
+.toc div{
+  padding:8px;
+  border-bottom:1px solid #ccc;
+  cursor:pointer;
+}
+
+/* author */
+.author{
+  display:none;
+  padding:15px;
+  font-size:15px;
+  line-height:1.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app" id="app">
+
+<div class="marquee">
+<span>🕌 বিসমিল্লাহির রাহমানির রাহিম — আমার হৃদয়ের স্বপ্ন — একটি অনন্য ইসলামিক ভাবনার বই 🤍</span>
+</div>
+
+<div class="header">
+<h1>আমার হৃদয়ের স্বপ্ন</h1>
+<p>লেখক: মাওলানা রুহুল আমীন</p>
+</div>
+
+<div class="clock" id="clock"></div>
+
+<div class="prayer">
+<strong>নামাজের সময়সূচি (স্থায়ী):</strong><br>
+ফজর: ৫:০০ AM | যোহর: ১:১৫ PM | আসর: ৪:৩০ PM<br>
+মাগরিব: সূর্যাস্ত | ইশা: ৮:০০ PM
+</div>
+
+<div class="content" id="content"></div>
+
+<div class="controls">
+<button onclick="prev()">⬅</button>
+<button onclick="toggleToc()">সূচি</button>
+<button onclick="toggleAuthor()">লেখক</button>
+<button onclick="next()">➡</button>
+</div>
+
+<div class="controls">
+<button onclick="font(-1)">A-</button>
+<button onclick="font(1)">A+</button>
+<button onclick="dark()">🌙</button>
+</div>
+
+<div class="toc" id="toc"></div>
+
+<div class="author" id="author">
+<strong>লেখক পরিচিতি</strong><br><br>
+মাওলানাঃ রুহুল আমীন<br>
+ভাইস প্রিন্সিপাল:<br>
+গয়েশপুর জামিয়া হাসানিয়া মমতাজুল উলূম<br>
+কওমী মাদরাসা ও এতিমখানা<br><br>
+ইমাম ও খতিব:<br>
+মুদাফর্দি উত্তরপাড়া জামে মসজিদ<br><br>
+📞 যোগাযোগ: 01774262965
+</div>
+
+</div>
+
+<script>
+/* বইয়ের লেখা এখানে দেবেন */
+const book=[
+{t:"ভূমিকা",c:"এখানে আপনার ভূমিকার লেখা দিন…"},
+{t:"অধ্যায় ১",c:"এখানে অধ্যায় ১ এর লেখা দিন…"},
+{t:"অধ্যায় ২",c:"এখানে অধ্যায় ২ এর লেখা দিন…"}
+];
+
+let i=0,fs=18;
+const content=document.getElementById("content");
+const toc=document.getElementById("toc");
+const author=document.getElementById("author");
+
+function show(){
+content.style.fontSize=fs+"px";
+content.innerText=book[i].t+"\n\n"+book[i].c;
+}
+function next(){if(i<book.length-1){i++;show();}}
+function prev(){if(i>0){i--;show();}}
+
+book.forEach((b,n)=>{
+let d=document.createElement("div");
+d.innerText=b.t;
+d.onclick=()=>{i=n;show();toggleToc();}
+toc.appendChild(d);
+});
+
+function toggleToc(){toc.style.display=toc.style.display=="block"?"none":"block";author.style.display="none";}
+function toggleAuthor(){author.style.display=author.style.display=="block"?"none":"block";toc.style.display="none";}
+function font(x){fs+=x;show();}
+function dark(){document.getElementById("app").classList.toggle("dark");}
+
+function clock(){
+const d=new Date();
+document.getElementById("clock").innerText=d.toLocaleTimeString('bn-BD');
+}
+setInterval(clock,1000);
+
+show();clock();
+</script>
+
+</body>
+</html>
